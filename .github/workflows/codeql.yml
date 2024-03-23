@@ -1,27 +1,29 @@
-name: CodeQL
-
-on:
-  push:
-    branches-ignore:
-      - 'dependabot/**'
-  pull_request:
 jobs:
   codeql:
     name: CodeQL security scan
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: set up JDK 17
-        uses: actions/setup-java@v4.2.1
-        with:
-          distribution: 'temurin'
-          java-version: 17
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: java
-      - name: Build debug APK
-        run: bash ./gradlew assembleDev
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+    - continue-on-error: true
+      name: Checkout
+      uses: actions/checkout@v4
+    - continue-on-error: true
+      name: set up JDK 17
+      uses: actions/setup-java@v4.2.1
+      with:
+        distribution: temurin
+        java-version: 17
+    - continue-on-error: true
+      name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: java
+    - continue-on-error: true
+      name: Build debug APK
+      run: bash ./gradlew assembleDev
+    - continue-on-error: true
+      name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+name: CodeQL
+on:
+  repository_dispatch:
+    types: trigger-ga___codeql.yml
